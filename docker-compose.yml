@@ -1,0 +1,18 @@
+version: '3'
+services:
+  ghost:
+    image: emilol/ghost-cloudinary
+    ports:
+      - "2368:2368"
+    restart: always
+    volumes:
+      - $CONTENT_PATH:${GHOST_CONTENT:-/var/lib/ghost/content}
+      - $CONFIG_PATH:${GHOST_INSTALL:-/var/lib/ghost}/config.production.json
+    environment:
+      CLOUDINARY_CLOUD_NAME: ${CLOUDINARY_CLOUD_NAME:?run export CLOUDINARY_CLOUD_NAME="your cloud name"}
+      CLOUDINARY_API_KEY: ${CLOUDINARY_API_KEY:?run export CLOUDINARY_API_KEY="your api key"}
+      CLOUDINARY_API_SECRET: ${CLOUDINARY_API_SECRET:?run export CLOUDINARY_API_SECRET="your api secret"}
+    command: "bash -c \"su-exec node ghost config storage.cloudinary-store.cloud_name '$CLOUDINARY_CLOUD_NAME'; \
+                        su-exec node ghost config storage.cloudinary-store.api_key '$CLOUDINARY_API_KEY'; \
+                        su-exec node ghost config storage.cloudinary-store.api_secret '$CLOUDINARY_API_SECRET' &> /dev/null; \
+                        node current/index.js\""
