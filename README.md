@@ -2,7 +2,7 @@
 
 ### Base Docker Image
 
-* [ghost:3.1.1-alpine](https://registry.hub.docker.com/_/ghost/)
+* [ghost:3.40.2-alpine](https://registry.hub.docker.com/_/ghost/)
 
 ### Installation
 
