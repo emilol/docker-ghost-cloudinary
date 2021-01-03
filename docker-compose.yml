@@ -1,13 +1,19 @@
 version: '3'
 services:
+  ghost-build:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    image: emilol/ghost-cloudinary
   ghost:
     image: emilol/ghost-cloudinary
-    ports:
-      - "2368:2368"
     restart: always
     volumes:
-      - $CONTENT_PATH:${GHOST_CONTENT:-/var/lib/ghost/content}
+      - $INSTALL_PATH/content:${GHOST_INSTALL:-/var/lib/ghost}/content
+      - $INSTALL_PATH/content.orig:${GHOST_INSTALL:-/var/lib/ghost}/content.orig
       - $CONFIG_PATH:${GHOST_INSTALL:-/var/lib/ghost}/config.production.json
+    ports:
+      - "2368:2368"
     environment:
       CLOUDINARY_CLOUD_NAME: ${CLOUDINARY_CLOUD_NAME:?run export CLOUDINARY_CLOUD_NAME="your cloud name"}
       CLOUDINARY_API_KEY: ${CLOUDINARY_API_KEY:?run export CLOUDINARY_API_KEY="your api key"}
