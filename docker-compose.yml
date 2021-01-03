@@ -1,10 +1,5 @@
 version: '3'
 services:
-  ghost-build:
-    build:
-      context: .
-      dockerfile: ./Dockerfile
-    image: emilol/ghost-cloudinary
   ghost:
     image: emilol/ghost-cloudinary
     restart: always
