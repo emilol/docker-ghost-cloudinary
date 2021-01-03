@@ -3,12 +3,12 @@ services:
   ghost:
     image: emilol/ghost-cloudinary
     restart: always
+    ports:
+      - "2368:2368"
     volumes:
       - $INSTALL_PATH/content:${GHOST_INSTALL:-/var/lib/ghost}/content
       - $INSTALL_PATH/content.orig:${GHOST_INSTALL:-/var/lib/ghost}/content.orig
       - $CONFIG_PATH:${GHOST_INSTALL:-/var/lib/ghost}/config.production.json
-    ports:
-      - "2368:2368"
     environment:
       CLOUDINARY_CLOUD_NAME: ${CLOUDINARY_CLOUD_NAME:?run export CLOUDINARY_CLOUD_NAME="your cloud name"}
       CLOUDINARY_API_KEY: ${CLOUDINARY_API_KEY:?run export CLOUDINARY_API_KEY="your api key"}
@@ -17,3 +17,8 @@ services:
                         su-exec node ghost config storage.cloudinary-store.api_key '$CLOUDINARY_API_KEY'; \
                         su-exec node ghost config storage.cloudinary-store.api_secret '$CLOUDINARY_API_SECRET' &> /dev/null; \
                         node current/index.js\""
+  localtunnel:
+    image: node:10-alpine
+    command: npx localtunnel --port 2368 --local-host ${GHOST_HOST:-localhost} --subdomain ${GHOST_SUBDOMAIN}
+    depends_on: 
+      - ghost
